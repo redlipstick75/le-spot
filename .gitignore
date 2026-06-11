@@ -46,6 +46,9 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 
-# contenu formateur (non distribué aux étudiants)
-/cours/
+# contenu formateur interne (non distribué aux étudiants)
+/cours/J3.md
+/cours/J4.md
+/cours/notes-formateur.md
+/cours/interne/
 /docs/
