@@ -1,7 +1,24 @@
+// =============================================================================
+// src/components/ui/card.tsx — Composant Card (shadcn/ui)
+// =============================================================================
+//
+// Une Card est un conteneur visuel avec fond, bordure et ombre légère.
+// Elle est utilisée partout dans l'app : créneaux du planning, réservations,
+// formulaires admin.
+//
+// Pattern shadcn : des sous-composants séparés (CardHeader, CardContent…)
+// qu'on assemble librement. Pas de props "title" ou "description" imposées :
+// on place ce qu'on veut où on veut.
+
 import * as React from "react"
+// React.ComponentProps<"div"> : type TypeScript qui récupère toutes les props
+// natives d'un <div> HTML (className, onClick, id, style...). On n'a pas à
+// les lister une par une — elles sont toutes acceptées et transmises via {...props}.
 
 import { cn } from "@/lib/utils"
 
+// Card — le conteneur principal.
+// size="sm" réduit les espacements internes (utilisé dans les tableaux compacts).
 function Card({
   className,
   size = "default",
@@ -10,7 +27,7 @@ function Card({
   return (
     <div
       data-slot="card"
-      data-size={size}
+      data-size={size} // attribut HTML personnalisé ciblé par les classes Tailwind data-[size=sm]:...
       className={cn(
         "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
         className
@@ -20,6 +37,7 @@ function Card({
   )
 }
 
+// CardHeader — zone du haut, contient généralement CardTitle et CardDescription.
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -33,6 +51,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardTitle — le titre de la Card (un <div> stylisé, pas un <h2>).
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -46,6 +65,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardDescription — texte secondaire sous le titre.
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -56,6 +76,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardAction — zone d'action alignée à droite du header (ex. un bouton "Voir tout").
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -69,6 +90,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardContent — le corps de la Card. C'est ici qu'on met le contenu principal.
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -79,6 +101,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardFooter — le pied de la Card, avec fond légèrement différent et bordure haute.
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

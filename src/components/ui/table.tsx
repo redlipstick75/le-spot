@@ -1,9 +1,23 @@
 "use client"
 
+// =============================================================================
+// src/components/ui/table.tsx — Composant Table (shadcn/ui)
+// =============================================================================
+//
+// Un tableau HTML (<table>) stylisé. Inclus par shadcn mais non utilisé dans
+// l'app actuellement (le planning utilise des div flexbox plutôt qu'un tableau).
+//
+// Architecture en sous-composants : chaque balise HTML du tableau a son
+// propre composant React avec les classes Tailwind appropriées.
+// Table → TableHeader → TableRow → TableHead  (en-têtes)
+// Table → TableBody  → TableRow → TableCell   (données)
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// Table — le conteneur. Le div extérieur permet le scroll horizontal sur mobile
+// (overflow-x-auto) sans casser la mise en page.
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
@@ -19,26 +33,29 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
   )
 }
 
+// TableHeader — le <thead> : contient les lignes d'en-tête.
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn("[&_tr]:border-b", className)} // bordure sous la ligne d'en-tête
       {...props}
     />
   )
 }
 
+// TableBody — le <tbody> : contient les lignes de données.
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return (
     <tbody
       data-slot="table-body"
-      className={cn("[&_tr:last-child]:border-0", className)}
+      className={cn("[&_tr:last-child]:border-0", className)} // pas de bordure sur la dernière ligne
       {...props}
     />
   )
 }
 
+// TableFooter — le <tfoot> : ligne de pied de tableau (totaux, résumés).
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
     <tfoot
@@ -52,6 +69,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   )
 }
 
+// TableRow — une ligne <tr>. Passe en fond grisé au survol (hover:bg-muted/50).
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
@@ -65,6 +83,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
+// TableHead — une cellule d'en-tête <th>. Texte en gras et aligné à gauche.
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
@@ -78,6 +97,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   )
 }
 
+// TableCell — une cellule de données <td>.
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
     <td
@@ -91,6 +111,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   )
 }
 
+// TableCaption — le <caption> HTML : légende affichée sous le tableau.
 function TableCaption({
   className,
   ...props

@@ -1,13 +1,31 @@
 "use client"
 
+// =============================================================================
+// src/components/ui/select.tsx — Composant Select / liste déroulante (shadcn/ui)
+// =============================================================================
+//
+// "use client" : les listes déroulantes ont besoin de JavaScript pour s'ouvrir,
+// gérer le clavier, et afficher le menu flottant.
+//
+// Ce composant n'est PAS utilisé dans l'app actuellement (on utilise des
+// <select> HTML natifs dans les formulaires admin et les filtres). Il est
+// inclus par shadcn pour les cas où on aurait besoin d'un select plus
+// personnalisé (avec icônes, groupes, recherche...).
+//
+// Architecture : même pattern "sous-composants" que Dialog et Card.
+// Select (racine) → SelectTrigger (bouton) → SelectContent (menu) → SelectItem (option)
+
 import * as React from "react"
 import { Select as SelectPrimitive } from "@base-ui/react/select"
 
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
+// Select — le composant racine. Gère l'état ouvert/fermé et la valeur sélectionnée.
+// C'est un alias direct du primitif : pas besoin de wrapper.
 const Select = SelectPrimitive.Root
 
+// SelectGroup — regroupe des options sous un même label.
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
     <SelectPrimitive.Group
@@ -18,6 +36,7 @@ function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   )
 }
 
+// SelectValue — affiche la valeur actuellement sélectionnée dans le trigger.
 function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value
@@ -28,6 +47,8 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
+// SelectTrigger — le bouton cliquable qui ouvre la liste déroulante.
+// size="sm" pour une version plus compacte.
 function SelectTrigger({
   className,
   size = "default",
@@ -47,6 +68,7 @@ function SelectTrigger({
       {...props}
     >
       {children}
+      {/* Icône chevron bas — indique visuellement que c'est un select */}
       <SelectPrimitive.Icon
         render={
           <ChevronDownIcon className="pointer-events-none size-4 text-muted-foreground" />
@@ -56,6 +78,8 @@ function SelectTrigger({
   )
 }
 
+// SelectContent — le menu déroulant flottant (rendu via un Portal).
+// side/sideOffset/align : contrôlent le positionnement du menu par rapport au trigger.
 function SelectContent({
   className,
   children,
@@ -72,6 +96,7 @@ function SelectContent({
   >) {
   return (
     <SelectPrimitive.Portal>
+      {/* Positioner : calcule la position du menu (en dessous, au dessus, etc.) */}
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
@@ -83,7 +108,7 @@ function SelectContent({
         <SelectPrimitive.Popup
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
-          className={cn("relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95", className )}
+          className={cn("relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95", className)}
           {...props}
         >
           <SelectScrollUpButton />
@@ -95,6 +120,7 @@ function SelectContent({
   )
 }
 
+// SelectLabel — titre d'un groupe d'options.
 function SelectLabel({
   className,
   ...props
@@ -108,6 +134,9 @@ function SelectLabel({
   )
 }
 
+// SelectItem — une option dans la liste.
+// La coche (CheckIcon) s'affiche automatiquement sur l'option sélectionnée
+// via SelectPrimitive.ItemIndicator.
 function SelectItem({
   className,
   children,
@@ -125,6 +154,7 @@ function SelectItem({
       <SelectPrimitive.ItemText className="flex flex-1 shrink-0 gap-2 whitespace-nowrap">
         {children}
       </SelectPrimitive.ItemText>
+      {/* Coche visible uniquement sur l'option actuellement sélectionnée */}
       <SelectPrimitive.ItemIndicator
         render={
           <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
@@ -136,6 +166,7 @@ function SelectItem({
   )
 }
 
+// SelectSeparator — ligne de séparation entre groupes d'options.
 function SelectSeparator({
   className,
   ...props
@@ -149,6 +180,8 @@ function SelectSeparator({
   )
 }
 
+// SelectScrollUpButton / SelectScrollDownButton — flèches qui apparaissent
+// quand la liste est trop longue et qu'il faut scroller.
 function SelectScrollUpButton({
   className,
   ...props
@@ -162,8 +195,7 @@ function SelectScrollUpButton({
       )}
       {...props}
     >
-      <ChevronUpIcon
-      />
+      <ChevronUpIcon />
     </SelectPrimitive.ScrollUpArrow>
   )
 }
@@ -181,8 +213,7 @@ function SelectScrollDownButton({
       )}
       {...props}
     >
-      <ChevronDownIcon
-      />
+      <ChevronDownIcon />
     </SelectPrimitive.ScrollDownArrow>
   )
 }
